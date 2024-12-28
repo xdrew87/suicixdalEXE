@@ -214,40 +214,58 @@ def TrackLu():
     for platform, result in results.items():
         print(f"{Wh}{platform}: {Gr}{result}")
 
-# Main menu of the program
-def main_menu():
-    clear_screen()
-    print(f"{Wh}Welcome to {Gr}SuicixdalEXE{Wh}, your multi-tool assistant!")
-    print(f"\n{Wh}Select an option:")
-    print(f"{Gr}[1]{Wh} IP Track")
-    print(f"{Gr}[2]{Wh} Phone Lookup")
-    print(f"{Gr}[3]{Wh} Track Usernames")
-    print(f"{Gr}[4]{Wh} Install N-ANOM")
-    print(f"{Gr}[5]{Wh} Install ZPhisher")
-    print(f"{Gr}[6]{Wh} Exit")
-    
-    try:
-        choice = int(input(f"\n{Wh}Enter your choice: {Gr}"))
-        if choice == 1:
-            IP_Track()
-        elif choice == 2:
-            phoneGW()
-        elif choice == 3:
-            TrackLu()
-        elif choice == 4:
-            install_nanom()
-        elif choice == 5:
-            install_zphisher()
-        elif choice == 6:
-            print(f"{Wh}Made by @xlsuixideix & @mlag Goodbye!{Gr}")
-            exit(0)
-        else:
-            print(f"{Re}Invalid choice! Please select a valid option.{Wh}")
-            main_menu()
-    except ValueError:
-        print(f"{Re}Invalid input. Please enter a valid number.{Wh}")
-        main_menu()
+# Enhanced ASCII banner (you can replace it with any ASCII art you like)
+banner = """
+   _______  _______  __    __  _______  _______ 
+  / ___   ||   _   ||  |  |  ||       ||       |
+ / /   |  ||  | |  ||   |_|  ||  _____||  _____|
+< <    |  ||  |_|  ||       || |_____ | |_____ 
+ \ \   |  ||       ||  _    ||_____  ||_____  |
+  \ \__|  ||   _   || | |   | _____| | _____| |
+   \____| |__| |__||_|  |__||_______||_______|
+"""
 
+def main_menu():
+    while True:
+        clear_screen()
+        print(f"{Wh}{Bld}{banner}{Wh}")  # Print banner with white bold text
+        
+        print(f"""
+        {Mg}===============================================
+        ============ {Gr}{Bld}Suicidal Multi-Tool{Wh} ============
+        ===============================================
+        {Gr}{Bld}1. {Wh}Track an IP{Gr}
+        {Cy}{Bld}2. {Wh}Phone Number Lookup{Gr}
+        {Ye}{Bld}3. {Wh}Track a Username{Gr}
+        {Mg}{Bld}4. {Wh}Show Public IP{Gr}
+        {Gr}{Bld}5. {Wh}N-ANOM{Gr}
+        {Ye}{Bld}6. {Wh}ZPhisher Installation{Gr}
+        {Re}{Bld}7. {Wh}Exit{Gr}
+        {Wh}===============================================
+        """)
+
+        # Prompt user for selection
+        choice = input(f"{Wh}{Bld}Select an option: {Gr}")
+        
+        if choice == "1":
+            IP_Track()
+        elif choice == "2":
+            phoneGW()
+        elif choice == "3":
+            TrackLu()
+        elif choice == "4":
+            showIP()
+        elif choice == "5":
+            install_nanom()  # Call the function to install/update N-ANOM
+        elif choice == "6":
+            install_zphisher()  # Call the function to install ZPhisher
+        elif choice == "7":
+            print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
+            break
+        else:
+            print(f"{Re}Invalid option. Please try again.{Wh}")
+            
 # Start the program
 if __name__ == "__main__":
     main_menu()
+    clear_screen()
