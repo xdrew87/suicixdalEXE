@@ -25,8 +25,10 @@ Bld = "\033[1m"  # Bold text
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
+        clear_screen()  # Clears screen before each option is processed
         func(*args, **kwargs)
         input(f"\n{Wh}{Bld}Press Enter to return to the main menu...{Wh}")
+        clear_screen()  # Clears screen after input to return to the menu
     return wrapper
 
 # Clear terminal screen
@@ -59,6 +61,33 @@ def install_zphisher():
     # Run the ZPhisher script
     print(f"{Wh}Running ZPhisher...{Gr}")
     subprocess.run(["bash", "zphisher.sh"], check=True)
+
+# Clone GitHub repository for N-ANOM
+def install_nanom():
+    clear_screen()
+    print(f"{Mg}Installing N-ANOM...{Wh}")
+    time.sleep(2)
+
+    tools_directory = "./suicixdalEXE/Tools"
+    
+    # Check if the tools directory exists, if not create it
+    if not os.path.exists(tools_directory):
+        print(f"{Wh}Creating Tools directory...{Gr}")
+        os.makedirs(tools_directory)
+
+    # Change to the Tools directory
+    os.chdir(tools_directory)
+
+    # Clone the N-ANOM repository
+    print(f"{Wh}Cloning N-ANOM repository...{Gr}")
+    subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git"], check=True)
+
+    # Change to the N-ANOM directory
+    os.chdir("N-ANOM")
+
+    # Run the N-ANOM script
+    print(f"{Wh}Running N-ANOM...{Gr}")
+    subprocess.run(["python3", "N-ANOM.py"], check=True)
 
 # Updated IP lookup function with additional info
 @is_option
@@ -191,44 +220,41 @@ def showIP():
     ip_data = response.json()
     print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
 
-# Main menu with improved formatting
+# Main menu with improved formatting and colors
 def main_menu():
     while True:
-        clear_screen()
-        print(f"""
-        {Mg}===============================================
-        ============ {Gr}{Bld}Suicidal Multi-Tool{Wh} =============
-        ===============================================
-        {Gr}{Bld}1. {Wh}Track an IP{Gr}
-        {Cy}{Bld}2. {Wh}Phone Number Lookup{Gr}
-        {Ye}{Bld}3. {Wh}Track a Username{Gr}
-        {Mg}{Bld}4. {Wh}Show Public IP{Gr}
-        {Gr}{Bld}5. {Wh}N-ANOM{Gr}
-        {Ye}{Bld}6. {Wh}ZPhisher Installation{Gr}
-        {Re}{Bld}7. {Wh}Exit{Gr}
-        {Wh}===============================================
-        """)
-        choice = input(f"{Wh}{Bld}Select an option: {Gr}")
+        clear_screen()  # Clear the screen each time the main menu is shown
+        print(f"{Gr}===================== {Bld}Main Menu {Gr}====================={Wh}")
+        print(f"{Wh}1. {Cy}Track IP{Wh}")
+        print(f"{Wh}2. {Cy}Track Phone Number{Wh}")
+        print(f"{Wh}3. {Cy}Track Username{Wh}")
+        print(f"{Wh}4. {Mg}Install ZPhisher{Wh}")
+        print(f"{Wh}5. {Mg}Install N-ANOM{Wh}")
+        print(f"{Wh}6. {Cy}Show Public IP{Wh}")
+        print(f"{Wh}7. {Re}Exit{Wh}")
+
+        choice = input(f"\n{Wh}{Bld}Choose an option: {Gr}")
         
-        if choice == "1":
+        if choice == '1':
             IP_Track()
-        elif choice == "2":
+        elif choice == '2':
             phoneGW()
-        elif choice == "3":
+        elif choice == '3':
             TrackLu()
-        elif choice == "4":
+        elif choice == '4':
+            install_zphisher()
+        elif choice == '5':
+            install_nanom()
+        elif choice == '6':
             showIP()
-        elif choice == "5":
-            N_ANOM()
-        elif choice == "6":
-            install_zphisher()  # Call the function to install ZPhisher
-        elif choice == "7":
-            print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
+        elif choice == '7':
+            print(f"{Wh}{Re}Exiting...{Wh}")
             break
         else:
-            print(f"{Re}Invalid option. Please try again.{Wh}")
+            print(f"{Re}Invalid choice! Please try again.{Wh}")
+            time.sleep(1)
 
-# Initialize and start
+# Entry point of the program
 if __name__ == "__main__":
-    clear_screen()
     main_menu()
+    clear_screen()
