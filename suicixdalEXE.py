@@ -248,7 +248,7 @@ def main_menu():
         elif choice == '6':
             showIP()
         elif choice == '7':
-            print(f"{Wh}{Re}Exiting...{Wh}")
+            print(f"{Wh}{Re}Exiting...Made by @xlsuixideix & @mlag{Wh}")
             break
         else:
             print(f"{Re}Invalid choice! Please try again.{Wh}")
