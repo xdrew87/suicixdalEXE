@@ -25,15 +25,41 @@ Bld = "\033[1m"  # Bold text
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
-        clear_screen()  # Clears screen before each option is processed
         func(*args, **kwargs)
         input(f"\n{Wh}{Bld}Press Enter to return to the main menu...{Wh}")
-        clear_screen()  # Clears screen after input to return to the menu
     return wrapper
 
 # Clear terminal screen
 def clear_screen():
     os.system("clear" if os.name == "posix" else "cls")
+
+# Clone GitHub repository for N-ANOM with check
+def install_nanom():
+    clear_screen()
+    print(f"{Mg}Installing N-ANOM...{Wh}")
+    time.sleep(2)
+
+    nanom_directory = "./suicixdalEXE/Tools/N-ANOM"
+
+    # Check if the N-ANOM directory exists
+    if os.path.exists(nanom_directory):
+        print(f"{Wh}Directory 'N-ANOM' already exists. Deleting it first...{Gr}")
+        try:
+            # Remove the existing directory
+            subprocess.run(["rm", "-rf", nanom_directory], check=True)
+            print(f"{Wh}'N-ANOM' directory deleted successfully.{Gr}")
+        except subprocess.CalledProcessError as e:
+            print(f"{Re}Failed to delete existing 'N-ANOM' directory: {e}{Wh}")
+            return
+
+    # Clone the N-ANOM repository
+    try:
+        print(f"{Wh}Cloning N-ANOM repository...{Gr}")
+        subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git"], check=True)
+        print(f"{Wh}N-ANOM cloned successfully!{Gr}")
+    except subprocess.CalledProcessError as e:
+        print(f"{Re}Failed to clone the repository: {e}{Wh}")
+        return
 
 # Clone GitHub repository for ZPhisher
 def install_zphisher():
@@ -61,33 +87,6 @@ def install_zphisher():
     # Run the ZPhisher script
     print(f"{Wh}Running ZPhisher...{Gr}")
     subprocess.run(["bash", "zphisher.sh"], check=True)
-
-# Clone GitHub repository for N-ANOM
-def install_nanom():
-    clear_screen()
-    print(f"{Mg}Installing N-ANOM...{Wh}")
-    time.sleep(2)
-
-    tools_directory = "./suicixdalEXE/Tools"
-    
-    # Check if the tools directory exists, if not create it
-    if not os.path.exists(tools_directory):
-        print(f"{Wh}Creating Tools directory...{Gr}")
-        os.makedirs(tools_directory)
-
-    # Change to the Tools directory
-    os.chdir(tools_directory)
-
-    # Clone the N-ANOM repository
-    print(f"{Wh}Cloning N-ANOM repository...{Gr}")
-    subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git"], check=True)
-
-    # Change to the N-ANOM directory
-    os.chdir("N-ANOM")
-
-    # Run the N-ANOM script
-    print(f"{Wh}Running N-ANOM...{Gr}")
-    subprocess.run(["python3", "N-ANOM.py"], check=True)
 
 # Updated IP lookup function with additional info
 @is_option
@@ -197,64 +196,58 @@ def TrackLu():
         {"url": "https://www.facebook.com/{}", "name": "Facebook"},
         {"url": "https://www.twitter.com/{}", "name": "Twitter"},
         {"url": "https://www.instagram.com/{}", "name": "Instagram"},
-        {"url": "https://www.linkedin.com/in/{}", "name": "LinkedIn"},
-        {"url": "https://www.github.com/{}", "name": "GitHub"},
         {"url": "https://www.tiktok.com/@{}", "name": "TikTok"},
+        {"url": "https://www.pinterest.com/{}", "name": "Pinterest"},
+        {"url": "https://www.linkedin.com/in/{}", "name": "LinkedIn"},
     ]
-    for site in social_media:
-        url = site['url'].format(username)
+
+    for platform in social_media:
+        url = platform["url"].format(username)
         response = requests.get(url)
+
         if response.status_code == 200:
-            results[site['name']] = url
+            results[platform["name"]] = f"Found on {platform['name']}: {url}"
         else:
-            results[site['name']] = f"{Wh}Not Found{Re}"
+            results[platform["name"]] = f"Not found on {platform['name']}"
 
-    print(f"\n{Wh}==================== {Gr}Username Information {Wh}====================")
-    for platform, link in results.items():
-        print(f"{Wh}{platform}: {Gr}{link}")
+    print(f"\n{Wh}========== {Gr}USERNAME TRACKING RESULTS {Wh}==========")
+    for platform, result in results.items():
+        print(f"{Wh}{platform}: {Gr}{result}")
 
-# Show public IP function
-@is_option
-def showIP():
-    response = requests.get('https://api.ipify.org?format=json')
-    ip_data = response.json()
-    print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
-
-# Main menu with improved formatting and colors
+# Main menu of the program
 def main_menu():
-    while True:
-        clear_screen()  # Clear the screen each time the main menu is shown
-        print(f"{Gr}===================== {Bld}Main Menu {Gr}====================={Wh}")
-        print(f"{Wh}1. {Cy}Track IP{Wh}")
-        print(f"{Wh}2. {Cy}Track Phone Number{Wh}")
-        print(f"{Wh}3. {Cy}Track Username{Wh}")
-        print(f"{Wh}4. {Mg}Install ZPhisher{Wh}")
-        print(f"{Wh}5. {Mg}Install N-ANOM{Wh}")
-        print(f"{Wh}6. {Cy}Show Public IP{Wh}")
-        print(f"{Wh}7. {Re}Exit{Wh}")
-
-        choice = input(f"\n{Wh}{Bld}Choose an option: {Gr}")
-        
-        if choice == '1':
+    clear_screen()
+    print(f"{Wh}Welcome to {Gr}SuicixdalEXE{Wh}, your multi-tool assistant!")
+    print(f"\n{Wh}Select an option:")
+    print(f"{Gr}[1]{Wh} IP Track")
+    print(f"{Gr}[2]{Wh} Phone Lookup")
+    print(f"{Gr}[3]{Wh} Track Usernames")
+    print(f"{Gr}[4]{Wh} Install N-ANOM")
+    print(f"{Gr}[5]{Wh} Install ZPhisher")
+    print(f"{Gr}[6]{Wh} Exit")
+    
+    try:
+        choice = int(input(f"\n{Wh}Enter your choice: {Gr}"))
+        if choice == 1:
             IP_Track()
-        elif choice == '2':
+        elif choice == 2:
             phoneGW()
-        elif choice == '3':
+        elif choice == 3:
             TrackLu()
-        elif choice == '4':
-            install_zphisher()
-        elif choice == '5':
+        elif choice == 4:
             install_nanom()
-        elif choice == '6':
-            showIP()
-        elif choice == '7':
-            print(f"{Wh}{Re}Exiting...Made by @xlsuixideix & @mlag{Wh}")
-            break
+        elif choice == 5:
+            install_zphisher()
+        elif choice == 6:
+            print(f"{Wh}Made by @xlsuixideix & @mlag Goodbye!{Gr}")
+            exit(0)
         else:
-            print(f"{Re}Invalid choice! Please try again.{Wh}")
-            time.sleep(1)
+            print(f"{Re}Invalid choice! Please select a valid option.{Wh}")
+            main_menu()
+    except ValueError:
+        print(f"{Re}Invalid input. Please enter a valid number.{Wh}")
+        main_menu()
 
-# Entry point of the program
+# Start the program
 if __name__ == "__main__":
     main_menu()
-    clear_screen()
