@@ -39,7 +39,8 @@ def install_nanom():
     print(f"{Mg}Installing N-ANOM...{Wh}")
     time.sleep(2)
 
-    nanom_directory = "./suicixdalEXE/Tools/N-ANOM"
+    tools_directory = "./Tools"
+    nanom_directory = os.path.join(tools_directory, "N-ANOM")
 
     # Check if the N-ANOM directory exists
     if os.path.exists(nanom_directory):
@@ -55,38 +56,47 @@ def install_nanom():
     # Clone the N-ANOM repository
     try:
         print(f"{Wh}Cloning N-ANOM repository...{Gr}")
-        subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git"], check=True)
+        subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git", nanom_directory], check=True)
         print(f"{Wh}N-ANOM cloned successfully!{Gr}")
     except subprocess.CalledProcessError as e:
         print(f"{Re}Failed to clone the repository: {e}{Wh}")
         return
 
-# Clone GitHub repository for ZPhisher
+# Clone GitHub repository for ZPhisher with check
 def install_zphisher():
     clear_screen()
     print(f"{Mg}Installing ZPhisher...{Wh}")
     time.sleep(2)
 
-    tools_directory = "./suicixdalEXE/Tools"
-    
-    # Check if the tools directory exists, if not create it
-    if not os.path.exists(tools_directory):
-        print(f"{Wh}Creating Tools directory...{Gr}")
-        os.makedirs(tools_directory)
+    tools_directory = "./Tools"
+    zphisher_directory = os.path.join(tools_directory, "zphisher")
 
-    # Change to the Tools directory
-    os.chdir(tools_directory)
+    # Check if the ZPhisher directory exists
+    if os.path.exists(zphisher_directory):
+        print(f"{Wh}Directory 'zphisher' already exists. Deleting it first...{Gr}")
+        try:
+            # Remove the existing directory
+            subprocess.run(["rm", "-rf", zphisher_directory], check=True)
+            print(f"{Wh}'zphisher' directory deleted successfully.{Gr}")
+        except subprocess.CalledProcessError as e:
+            print(f"{Re}Failed to delete existing 'zphisher' directory: {e}{Wh}")
+            return
 
     # Clone the ZPhisher repository
-    print(f"{Wh}Cloning ZPhisher repository...{Gr}")
-    subprocess.run(["git", "clone", "https://github.com/htr-tech/zphisher"], check=True)
-
-    # Change to the zphisher directory
-    os.chdir("zphisher")
+    try:
+        print(f"{Wh}Cloning ZPhisher repository...{Gr}")
+        subprocess.run(["git", "clone", "https://github.com/htr-tech/zphisher", zphisher_directory], check=True)
+        print(f"{Wh}ZPhisher cloned successfully!{Gr}")
+    except subprocess.CalledProcessError as e:
+        print(f"{Re}Failed to clone the repository: {e}{Wh}")
+        return
 
     # Run the ZPhisher script
-    print(f"{Wh}Running ZPhisher...{Gr}")
-    subprocess.run(["bash", "zphisher.sh"], check=True)
+    try:
+        print(f"{Wh}Running ZPhisher...{Gr}")
+        subprocess.run(["bash", os.path.join(zphisher_directory, "zphisher.sh")], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"{Re}Failed to run ZPhisher script: {e}{Wh}")
 
 # Updated IP lookup function with additional info
 @is_option
