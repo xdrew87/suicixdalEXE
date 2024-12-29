@@ -6,7 +6,7 @@ My socials to msg are instagram or discord @xlsuixideix & @mlag for instagram, s
 ![Screenshot 2024-12-29 003019](https://github.com/user-attachments/assets/ce12598a-6b66-4d25-9533-90a34f8ec5ba)
 
 
-Instalation on Linux (deb)
+IInstalltion on Linux (deb)
 
 sudo apt-get install git
 sudo apt-get install python3
