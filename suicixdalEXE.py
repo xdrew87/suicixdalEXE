@@ -1,5 +1,6 @@
 import os
 import subprocess
+import random 
 import requests
 import json
 import time
@@ -25,29 +26,17 @@ Bld = "\033[1m"  # Bold text
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
-        clear_screen()  # Clears screen before each option is processed
-        display_ascii_art('ascii_art.txt')  # Display ASCII art from file
         func(*args, **kwargs)
         input(f"\n{Wh}{Bld}Press Enter to return to the main menu...{Wh}")
-        clear_screen()  # Clears screen after input to return to the menu
     return wrapper
 
 # Clear terminal screen
 def clear_screen():
     os.system("clear" if os.name == "posix" else "cls")
 
-# Function to read and display ASCII art from a file
-def display_ascii_art(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            ascii_art = file.read()
-            print(ascii_art)
-    except FileNotFoundError:
-        print(f"{Re}Error: ASCII art file not found at {file_path}{Wh}")
-
 # Clone GitHub repository for ZPhisher
-@is_option
 def install_zphisher():
+    clear_screen()
     print(f"{Mg}Installing ZPhisher...{Wh}")
     time.sleep(2)
 
@@ -71,29 +60,6 @@ def install_zphisher():
     # Run the ZPhisher script
     print(f"{Wh}Running ZPhisher...{Gr}")
     subprocess.run(["bash", "zphisher.sh"], check=True)
-
-# Clone GitHub repository for N-ANOM
-@is_option
-def install_nanom():
-    print(f"{Mg}Running N-ANOM...{Wh}")
-    time.sleep(2)
-
-    nanom_directory = "./suicixdalEXE/Tools/N-ANOM"
-
-    # Check if the N-ANOM directory exists
-    if not os.path.exists(nanom_directory):
-        print(f"{Re}Directory 'N-ANOM' does not exist. Please ensure it is installed on your VPS.{Wh}")
-        return
-
-    # Change to the N-ANOM directory
-    os.chdir(nanom_directory)
-
-    # Run the N-ANOM script
-    try:
-        print(f"{Wh}Running N-ANOM...{Gr}")
-        subprocess.run(["bash", "nanom.sh"], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"{Re}Failed to run N-ANOM script: {e}{Wh}")
 
 # Updated IP lookup function with additional info
 @is_option
@@ -226,22 +192,36 @@ def showIP():
     ip_data = response.json()
     print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
 
-# Main menu with improved formatting and colors
+# Ip Pinger function
+@is_option
+def ip_pinger():
+    ip = input("IP: ")
+    while True:
+        response = subprocess.run(['ping', '-n', '1', ip], capture_output=True, text=True)
+        if "TTL=" not in response.stdout:
+            print("Get Fucked Scrub Getting Slammed By FrostedC2")
+        num = random.randint(1, 9)
+        os.system(f'color {num}')
+        subprocess.run(['ping', '-n', '2', '127.0.0.1'], stdout=subprocess.DEVNULL)
+
+# Main menu with improved formatting
 def main_menu():
     while True:
-        clear_screen()  # Clear the screen each time the main menu is shown
-        display_ascii_art('ascii_art.txt')  # Display ASCII art from file
-        print(f"{Gr}===================== {Bld}Main Menu {Gr}====================={Wh}")
-        print(f"{Wh}1. {Cy}Track IP{Wh}")
-        print(f"{Wh}2. {Cy}Track Phone Number{Wh}")
-        print(f"{Wh}3. {Cy}Track Username{Wh}")
-        print(f"{Wh}4. {Mg}Install ZPhisher{Wh}")
-        print(f"{Wh}5. {Mg}Install N-ANOM{Wh}")
-        print(f"{Wh}6. {Cy}Show Public IP{Wh}")
-        print(f"{Wh}7. {Re}Exit{Wh}")
-        print(f"{Gr}================================================={Wh}")
-
-        # Prompt user for selection
+        clear_screen()
+        print(f"""
+        {Mg}===============================================
+        ============ {Gr}{Bld}Suicidal Multi-Tool{Wh} =============
+        ===============================================
+        {Gr}{Bld}1. {Wh}Track an IP{Gr}
+        {Cy}{Bld}2. {Wh}Phone Number Lookup{Gr}
+        {Ye}{Bld}3. {Wh}Track a Username{Gr}
+        {Mg}{Bld}4. {Wh}Show Public IP{Gr}
+        {Gr}{Bld}5. {Wh}N-ANOM{Gr}
+        {Ye}{Bld}6. {Wh}ZPhisher Installation{Gr}
+        {Re}{Bld}7. {Wh}Ip pinger{Gr}
+        {Re}{Bld}8. {Wh}Exit{Gr}
+        {Wh}===============================================
+        """)
         choice = input(f"{Wh}{Bld}Select an option: {Gr}")
         
         if choice == "1":
@@ -251,33 +231,20 @@ def main_menu():
         elif choice == "3":
             TrackLu()
         elif choice == "4":
-            install_zphisher()
-        elif choice == "5":
-            install_nanom()
-        elif choice == "6":
             showIP()
+        elif choice == "5":
+            N_ANOM()
+        elif choice == "6":
+            install_zphisher()  # Call the function to install ZPhisher
         elif choice == "7":
-            print(f"{Wh}This tool was made by @mlag or xdrew87. Goodbye!{Wh}")
+            ip_pinger()
+        elif choice == "8":
+            print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
             break
         else:
             print(f"{Re}Invalid option. Please try again.{Wh}")
 
-# Enhanced ASCII banner (you can replace it with any ASCII art you like)
-banner = """
-   _______  _______  __    __  _______  _______ 
-  / ___   ||   _   ||  |  |  ||       ||       |
- / /   |  ||  | |  ||   |_|  ||  _____||  _____|
-< <    |  ||  |_|  ||       || |_____ | |_____ 
- \ \   |  ||       ||  _    ||_____  ||_____  |
-  \ \__|  ||   _   || | |   | _____| | _____| |
-   \____| |__| |__||_|  |__||_______||_______|
-"""
-
-def main():
-    clear_screen()
-    print(f"{Wh}{Bld}{banner}{Wh}")  # Print banner with white bold text
-    main_menu()
-
-# Start the program
+# Initialize and start
 if __name__ == "__main__":
-    main()
+    clear_screen()
+    main_menu()
