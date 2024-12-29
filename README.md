@@ -9,12 +9,14 @@ My socials to msg are instagram or discord @xlsuixideix & @mlag for instagram, s
 IInstalltion on Linux (deb)
 
 sudo apt-get install git
+
 sudo apt-get install python3
 
 
 Instalation on Termux
 
 pkg install git
+
 pkg install python3
 
 
