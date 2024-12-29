@@ -25,78 +25,75 @@ Bld = "\033[1m"  # Bold text
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
+        clear_screen()  # Clears screen before each option is processed
+        display_ascii_art('ascii_art.txt')  # Display ASCII art from file
         func(*args, **kwargs)
         input(f"\n{Wh}{Bld}Press Enter to return to the main menu...{Wh}")
+        clear_screen()  # Clears screen after input to return to the menu
     return wrapper
 
 # Clear terminal screen
 def clear_screen():
     os.system("clear" if os.name == "posix" else "cls")
 
-# Clone GitHub repository for N-ANOM with check
-def install_nanom():
-    clear_screen()
-    print(f"{Mg}Installing N-ANOM...{Wh}")
-    time.sleep(2)
-
-    tools_directory = "./Tools"
-    nanom_directory = os.path.join(tools_directory, "N-ANOM")
-
-    # Check if the N-ANOM directory exists
-    if os.path.exists(nanom_directory):
-        print(f"{Wh}Directory 'N-ANOM' already exists. Deleting it first...{Gr}")
-        try:
-            # Remove the existing directory
-            subprocess.run(["rm", "-rf", nanom_directory], check=True)
-            print(f"{Wh}'N-ANOM' directory deleted successfully.{Gr}")
-        except subprocess.CalledProcessError as e:
-            print(f"{Re}Failed to delete existing 'N-ANOM' directory: {e}{Wh}")
-            return
-
-    # Clone the N-ANOM repository
+# Function to read and display ASCII art from a file
+def display_ascii_art(file_path):
     try:
-        print(f"{Wh}Cloning N-ANOM repository...{Gr}")
-        subprocess.run(["git", "clone", "https://github.com/Nabil-Official/N-ANOM.git", nanom_directory], check=True)
-        print(f"{Wh}N-ANOM cloned successfully!{Gr}")
-    except subprocess.CalledProcessError as e:
-        print(f"{Re}Failed to clone the repository: {e}{Wh}")
-        return
+        with open(file_path, 'r') as file:
+            ascii_art = file.read()
+            print(ascii_art)
+    except FileNotFoundError:
+        print(f"{Re}Error: ASCII art file not found at {file_path}{Wh}")
 
-# Clone GitHub repository for ZPhisher with check
+# Clone GitHub repository for ZPhisher
+@is_option
 def install_zphisher():
-    clear_screen()
     print(f"{Mg}Installing ZPhisher...{Wh}")
     time.sleep(2)
 
-    tools_directory = "./Tools"
-    zphisher_directory = os.path.join(tools_directory, "zphisher")
+    tools_directory = "./suicixdalEXE/Tools"
+    
+    # Check if the tools directory exists, if not create it
+    if not os.path.exists(tools_directory):
+        print(f"{Wh}Creating Tools directory...{Gr}")
+        os.makedirs(tools_directory)
 
-    # Check if the ZPhisher directory exists
-    if os.path.exists(zphisher_directory):
-        print(f"{Wh}Directory 'zphisher' already exists. Deleting it first...{Gr}")
-        try:
-            # Remove the existing directory
-            subprocess.run(["rm", "-rf", zphisher_directory], check=True)
-            print(f"{Wh}'zphisher' directory deleted successfully.{Gr}")
-        except subprocess.CalledProcessError as e:
-            print(f"{Re}Failed to delete existing 'zphisher' directory: {e}{Wh}")
-            return
+    # Change to the Tools directory
+    os.chdir(tools_directory)
 
     # Clone the ZPhisher repository
-    try:
-        print(f"{Wh}Cloning ZPhisher repository...{Gr}")
-        subprocess.run(["git", "clone", "https://github.com/htr-tech/zphisher", zphisher_directory], check=True)
-        print(f"{Wh}ZPhisher cloned successfully!{Gr}")
-    except subprocess.CalledProcessError as e:
-        print(f"{Re}Failed to clone the repository: {e}{Wh}")
-        return
+    print(f"{Wh}Cloning ZPhisher repository...{Gr}")
+    subprocess.run(["git", "clone", "https://github.com/htr-tech/zphisher"], check=True)
+
+    # Change to the zphisher directory
+    os.chdir("zphisher")
 
     # Run the ZPhisher script
+    print(f"{Wh}Running ZPhisher...{Gr}")
+    subprocess.run(["bash", "zphisher.sh"], check=True)
+
+# Clone GitHub repository for N-ANOM
+@is_option
+def install_nanom():
+    print(f"{Mg}Running N-ANOM...{Wh}")
+    time.sleep(2)
+
+    nanom_directory = "./suicixdalEXE/Tools/N-ANOM"
+
+    # Check if the N-ANOM directory exists
+    if not os.path.exists(nanom_directory):
+        print(f"{Re}Directory 'N-ANOM' does not exist. Please ensure it is installed on your VPS.{Wh}")
+        return
+
+    # Change to the N-ANOM directory
+    os.chdir(nanom_directory)
+
+    # Run the N-ANOM script
     try:
-        print(f"{Wh}Running ZPhisher...{Gr}")
-        subprocess.run(["bash", os.path.join(zphisher_directory, "zphisher.sh")], check=True)
+        print(f"{Wh}Running N-ANOM...{Gr}")
+        subprocess.run(["bash", "nanom.sh"], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"{Re}Failed to run ZPhisher script: {e}{Wh}")
+        print(f"{Re}Failed to run N-ANOM script: {e}{Wh}")
 
 # Updated IP lookup function with additional info
 @is_option
@@ -206,23 +203,64 @@ def TrackLu():
         {"url": "https://www.facebook.com/{}", "name": "Facebook"},
         {"url": "https://www.twitter.com/{}", "name": "Twitter"},
         {"url": "https://www.instagram.com/{}", "name": "Instagram"},
-        {"url": "https://www.tiktok.com/@{}", "name": "TikTok"},
-        {"url": "https://www.pinterest.com/{}", "name": "Pinterest"},
         {"url": "https://www.linkedin.com/in/{}", "name": "LinkedIn"},
+        {"url": "https://www.github.com/{}", "name": "GitHub"},
+        {"url": "https://www.tiktok.com/@{}", "name": "TikTok"},
     ]
-
-    for platform in social_media:
-        url = platform["url"].format(username)
+    for site in social_media:
+        url = site['url'].format(username)
         response = requests.get(url)
-
         if response.status_code == 200:
-            results[platform["name"]] = f"Found on {platform['name']}: {url}"
+            results[site['name']] = url
         else:
-            results[platform["name"]] = f"Not found on {platform['name']}"
+            results[site['name']] = f"{Wh}Not Found{Re}"
 
-    print(f"\n{Wh}========== {Gr}USERNAME TRACKING RESULTS {Wh}==========")
-    for platform, result in results.items():
-        print(f"{Wh}{platform}: {Gr}{result}")
+    print(f"\n{Wh}==================== {Gr}Username Information {Wh}====================")
+    for platform, link in results.items():
+        print(f"{Wh}{platform}: {Gr}{link}")
+
+# Show public IP function
+@is_option
+def showIP():
+    response = requests.get('https://api.ipify.org?format=json')
+    ip_data = response.json()
+    print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
+
+# Main menu with improved formatting and colors
+def main_menu():
+    while True:
+        clear_screen()  # Clear the screen each time the main menu is shown
+        display_ascii_art('ascii_art.txt')  # Display ASCII art from file
+        print(f"{Gr}===================== {Bld}Main Menu {Gr}====================={Wh}")
+        print(f"{Wh}1. {Cy}Track IP{Wh}")
+        print(f"{Wh}2. {Cy}Track Phone Number{Wh}")
+        print(f"{Wh}3. {Cy}Track Username{Wh}")
+        print(f"{Wh}4. {Mg}Install ZPhisher{Wh}")
+        print(f"{Wh}5. {Mg}Install N-ANOM{Wh}")
+        print(f"{Wh}6. {Cy}Show Public IP{Wh}")
+        print(f"{Wh}7. {Re}Exit{Wh}")
+        print(f"{Gr}================================================={Wh}")
+
+        # Prompt user for selection
+        choice = input(f"{Wh}{Bld}Select an option: {Gr}")
+        
+        if choice == "1":
+            IP_Track()
+        elif choice == "2":
+            phoneGW()
+        elif choice == "3":
+            TrackLu()
+        elif choice == "4":
+            install_zphisher()
+        elif choice == "5":
+            install_nanom()
+        elif choice == "6":
+            showIP()
+        elif choice == "7":
+            print(f"{Wh}This tool was made by @mlag or xdrew87. Goodbye!{Wh}")
+            break
+        else:
+            print(f"{Re}Invalid option. Please try again.{Wh}")
 
 # Enhanced ASCII banner (you can replace it with any ASCII art you like)
 banner = """
@@ -235,47 +273,11 @@ banner = """
    \____| |__| |__||_|  |__||_______||_______|
 """
 
-def main_menu():
-    while True:
-        clear_screen()
-        print(f"{Wh}{Bld}{banner}{Wh}")  # Print banner with white bold text
-        
-        print(f"""
-        {Mg}===============================================
-        ============ {Gr}{Bld}Suicidal Multi-Tool{Wh} ============
-        ===============================================
-        {Gr}{Bld}1. {Wh}Track an IP{Gr}
-        {Cy}{Bld}2. {Wh}Phone Number Lookup{Gr}
-        {Ye}{Bld}3. {Wh}Track a Username{Gr}
-        {Mg}{Bld}4. {Wh}Show Public IP{Gr}
-        {Gr}{Bld}5. {Wh}N-ANOM{Gr}
-        {Ye}{Bld}6. {Wh}ZPhisher Installation{Gr}
-        {Re}{Bld}7. {Wh}Exit{Gr}
-        {Wh}===============================================
-        """)
+def main():
+    clear_screen()
+    print(f"{Wh}{Bld}{banner}{Wh}")  # Print banner with white bold text
+    main_menu()
 
-        # Prompt user for selection
-        choice = input(f"{Wh}{Bld}Select an option: {Gr}")
-        
-        if choice == "1":
-            IP_Track()
-        elif choice == "2":
-            phoneGW()
-        elif choice == "3":
-            TrackLu()
-        elif choice == "4":
-            showIP()
-        elif choice == "5":
-            install_nanom()  # Call the function to install/update N-ANOM
-        elif choice == "6":
-            install_zphisher()  # Call the function to install ZPhisher
-        elif choice == "7":
-            print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
-            break
-        else:
-            print(f"{Re}Invalid option. Please try again.{Wh}")
-            
 # Start the program
 if __name__ == "__main__":
-    main_menu()
-    clear_screen()
+    main()
