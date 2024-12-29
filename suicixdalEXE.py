@@ -50,6 +50,11 @@ def install_zphisher():
     # Change to the Tools directory
     os.chdir(tools_directory)
 
+    # Remove existing zphisher directory if it exists
+    if os.path.exists("zphisher"):
+        print(f"{Wh}Removing existing ZPhisher directory...{Gr}")
+        subprocess.run(["rm", "-rf", "zphisher"], check=True)
+
     # Clone the ZPhisher repository
     print(f"{Wh}Cloning ZPhisher repository...{Gr}")
     subprocess.run(["git", "clone", "https://github.com/htr-tech/zphisher"], check=True)
@@ -192,17 +197,19 @@ def showIP():
     ip_data = response.json()
     print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
 
-# Ip Pinger function
+# # Ip Pinger function
 @is_option
 def ip_pinger():
-    ip = input("IP: ")
+    ip = input(f"{Wh}Enter IP address to ping: {Gr}")
     while True:
         response = subprocess.run(['ping', '-n', '1', ip], capture_output=True, text=True)
-        if "TTL=" not in response.stdout:
-            print("Get Fucked Scrub Getting Slammed By FrostedC2")
+        if "TTL=" in response.stdout or "ttl=" in response.stdout:
+            print(f"{Gr}Ping to {ip} successful.{Wh}")
+        else:
+            print(f"{Re}Ping to {ip} failed.{Wh}")
         num = random.randint(1, 9)
         os.system(f'color {num}')
-        subprocess.run(['ping', '-n', '2', '127.0.0.1'], stdout=subprocess.DEVNULL)
+        time.sleep(1)
 
 # Main menu with improved formatting
 def main_menu():
@@ -216,10 +223,9 @@ def main_menu():
         {Cy}{Bld}2. {Wh}Phone Number Lookup{Gr}
         {Ye}{Bld}3. {Wh}Track a Username{Gr}
         {Mg}{Bld}4. {Wh}Show Public IP{Gr}
-        {Gr}{Bld}5. {Wh}N-ANOM{Gr}
-        {Ye}{Bld}6. {Wh}ZPhisher Installation{Gr}
-        {Re}{Bld}7. {Wh}Ip pinger{Gr}
-        {Re}{Bld}8. {Wh}Exit{Gr}
+        {Gr}{Bld}5. {Wh}ZPhisher Installation{Gr}
+        {Re}{Bld}6. {Wh}Ip pinger{Gr}
+        {Re}{Bld}7. {Wh}Exit{Gr}
         {Wh}===============================================
         """)
         choice = input(f"{Wh}{Bld}Select an option: {Gr}")
@@ -233,12 +239,10 @@ def main_menu():
         elif choice == "4":
             showIP()
         elif choice == "5":
-            N_ANOM()
-        elif choice == "6":
             install_zphisher()  # Call the function to install ZPhisher
-        elif choice == "7":
+        elif choice == "6":
             ip_pinger()
-        elif choice == "8":
+        elif choice == "7":
             print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
             break
         else:
