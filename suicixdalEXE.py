@@ -208,9 +208,9 @@ def ip_pinger():
         while True:
             response = subprocess.run(ping_command, capture_output=True, text=True)
             if "TTL=" in response.stdout or "ttl=" in response.stdout:
-                print(f"{Gr}Ping to {ip} successful.{Wh}")
+                print(f"{Gr}Ping skids {ip} successful.{Wh}")
             else:
-                print(f"{Re}Ping to {ip} Slammed by Frosted C2.{Wh}")
+                print(f"{Re}Ping to skids {ip} offline.{Wh}")
             num = random.randint(1, 9)
             if os.name == "nt":  # Only change color on Windows
                 os.system(f'color {num}')
