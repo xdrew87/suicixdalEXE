@@ -3,7 +3,7 @@ the phone number code from https://github.com/HunxByts/GhostTrack.
 My socials to msg are instagram or discord @xlsuixideix & @mlag for instagram, suicixde for discord.
 
 
-![Screenshot 2024-12-29 003019](https://github.com/user-attachments/assets/ce12598a-6b66-4d25-9533-90a34f8ec5ba)
+![Screenshot_2024-12-29_144222](https://github.com/user-attachments/assets/d88e7885-01f9-4fcb-a2dc-6149e276b5fd)
 
 
 IInstalltion on Linux (deb)
