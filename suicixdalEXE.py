@@ -5,6 +5,8 @@ import requests
 import json
 import time
 import phonenumbers
+import platform
+import sys
 from phonenumbers import (
     parse,
     is_valid_number,
@@ -197,19 +199,25 @@ def showIP():
     ip_data = response.json()
     print(f"\n{Wh}Your Public IP Address: {Gr}{ip_data['ip']}{Wh}")
 
-# # Ip Pinger function
+# Ip Pinger function
 @is_option
 def ip_pinger():
     ip = input(f"{Wh}Enter IP address to ping: {Gr}")
-    while True:
-        response = subprocess.run(['ping', '-n', '1', ip], capture_output=True, text=True)
-        if "TTL=" in response.stdout or "ttl=" in response.stdout:
-            print(f"{Gr}Ping to {ip} successful.{Wh}")
-        else:
-            print(f"{Re}Ping to {ip} failed.{Wh}")
-        num = random.randint(1, 9)
-        os.system(f'color {num}')
-        time.sleep(1)
+    ping_command = ['ping', '-c', '1', ip] if platform.system().lower() != 'windows' else ['ping', '-n', '1', ip]
+    try:
+        while True:
+            response = subprocess.run(ping_command, capture_output=True, text=True)
+            if "TTL=" in response.stdout or "ttl=" in response.stdout:
+                print(f"{Gr}Ping to {ip} successful.{Wh}")
+            else:
+                print(f"{Re}Ping to {ip} Slammed by Frosted C2.{Wh}")
+            num = random.randint(1, 9)
+            if os.name == "nt":  # Only change color on Windows
+                os.system(f'color {num}')
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print(f"\n{Re}Ping interrupted. Returning to main menu...{Wh}")
+        main_menu()
 
 # Main menu with improved formatting
 def main_menu():
@@ -244,7 +252,7 @@ def main_menu():
             ip_pinger()
         elif choice == "7":
             print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
-            break
+            sys.exit()
         else:
             print(f"{Re}Invalid option. Please try again.{Wh}")
 
