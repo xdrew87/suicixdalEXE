@@ -2,7 +2,7 @@ This is a tool for educational purpose only and im am not responsible for what h
 the phone number code from https://github.com/HunxByts/GhostTrack. 
 My socials to msg are instagram or discord @xlsuixideix & @mlag for instagram, suicixde for discord.
 
-VERSION 1
+VERSION 1 OG version 
 
 ![Screenshot_2024-12-29_144222](https://github.com/user-attachments/assets/d88e7885-01f9-4fcb-a2dc-6149e276b5fd)
 
