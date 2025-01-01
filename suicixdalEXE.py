@@ -7,6 +7,9 @@ import time
 import phonenumbers
 import platform
 import sys
+import shutil
+import stat
+import traceback
 from phonenumbers import (
     parse,
     is_valid_number,
@@ -28,7 +31,11 @@ Bld = "\033[1m"  # Bold text
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
-        func(*args, **kwargs)
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            print(f"{Re}An error occurred: {e}{Wh}")
+            traceback.print_exc()
         input(f"\n{Wh}{Bld}Press Enter to return to the main menu...{Wh}")
     return wrapper
 
@@ -55,7 +62,7 @@ def install_zphisher():
     # Remove existing zphisher directory if it exists
     if os.path.exists("zphisher"):
         print(f"{Wh}Removing existing ZPhisher directory...{Gr}")
-        subprocess.run(["rm", "-rf", "zphisher"], check=True)
+        shutil.rmtree("zphisher")
 
     # Clone the ZPhisher repository
     print(f"{Wh}Cloning ZPhisher repository...{Gr}")
@@ -67,6 +74,39 @@ def install_zphisher():
     # Run the ZPhisher script
     print(f"{Wh}Running ZPhisher...{Gr}")
     subprocess.run(["bash", "zphisher.sh"], check=True)
+
+# Clone GitHub repository for info-site
+def install_info_site():
+    clear_screen()
+    print(f"{Mg}Installing info-site...{Wh}")
+    time.sleep(2)
+
+    tools_directory = "./suicixdalEXE/Tools"
+    
+    # Check if the tools directory exists, if not create it
+    if not os.path.exists(tools_directory):
+        print(f"{Wh}Creating Tools directory...{Gr}")
+        os.makedirs(tools_directory)
+
+    # Change to the Tools directory
+    os.chdir(tools_directory)
+
+    # Remove existing info-site directory if it exists
+    if os.path.exists("info-site"):
+        print(f"{Wh}Removing existing info-site directory...{Gr}")
+        shutil.rmtree("info-site")
+
+    # Clone the info-site repository
+    print(f"{Wh}Cloning info-site repository...{Gr}")
+    subprocess.run(["git", "clone", "https://github.com/king-hacking/info-site.git"], check=True)
+
+    # Change to the info-site directory
+    os.chdir("info-site")
+
+    # Run the info-site script
+    print(f"{Wh}Running info-site...{Gr}")
+    subprocess.run(["bash", "info.sh"], check=True)
+
 
 # Updated IP lookup function with additional info
 @is_option
@@ -208,9 +248,9 @@ def ip_pinger():
         while True:
             response = subprocess.run(ping_command, capture_output=True, text=True)
             if "TTL=" in response.stdout or "ttl=" in response.stdout:
-                print(f"{Gr}Ping skids {ip} successful.{Wh}")
+                print(f"{Gr}Ping to {ip} successful.{Wh}")
             else:
-                print(f"{Re}Ping to skids {ip} offline.{Wh}")
+                print(f"{Re}Ping to {ip} Slammed by Frosted C2.{Wh}")
             num = random.randint(1, 9)
             if os.name == "nt":  # Only change color on Windows
                 os.system(f'color {num}')
@@ -232,8 +272,9 @@ def main_menu():
         {Ye}{Bld}3. {Wh}Track a Username{Gr}
         {Mg}{Bld}4. {Wh}Show Public IP{Gr}
         {Gr}{Bld}5. {Wh}ZPhisher Installation{Gr}
-        {Re}{Bld}6. {Wh}Ip pinger{Gr}
-        {Re}{Bld}7. {Wh}Exit{Gr}
+        {Cy}{Bld}6. {Wh}info-site{Gr}
+        {Re}{Bld}7. {Wh}Ip pinger{Gr}
+        {Re}{Bld}8. {Wh}Exit{Gr}
         {Wh}===============================================
         """)
         choice = input(f"{Wh}{Bld}Select an option: {Gr}")
@@ -249,8 +290,10 @@ def main_menu():
         elif choice == "5":
             install_zphisher()  # Call the function to install ZPhisher
         elif choice == "6":
-            ip_pinger()
+            install_info_site()  # Call the function to install info-site
         elif choice == "7":
+            ip_pinger()
+        elif choice == "8":
             print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
             sys.exit()
         else:
