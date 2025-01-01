@@ -8,7 +8,7 @@ VERSION 1 OG version
 
 
 
-VERSION 2 work in progress have to fix a git clone issue this is what version 2 looks like for now will update the ASCII once gif are made for it  
+VERSION 2 is done and works ASCII GIF will be added 2.5 or 3.0 version im looking for the right ones to add for evey option   
 ![Screenshot_2024-12-30_181009](https://github.com/user-attachments/assets/5378cb8e-fa79-4753-8477-d597bf165faf)
 
 
