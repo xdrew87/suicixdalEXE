@@ -10,6 +10,10 @@ import sys
 import shutil
 import stat
 import traceback
+import socket
+import time
+import argparse
+import re  # Ensure the re module is imported for ANSI escape sequence handling
 from phonenumbers import (
     parse,
     is_valid_number,
@@ -18,6 +22,8 @@ from phonenumbers import (
     timezone,
     PhoneNumberFormat
 )
+from termcolor import colored
+from datetime import datetime
 
 # Constants for color codes
 Wh = "\033[97m"  # White color
@@ -259,6 +265,53 @@ def ip_pinger():
         print(f"\n{Re}Ping interrupted. Returning to main menu...{Wh}")
         main_menu()
 
+def visible_length(text):
+    """Calculate the visible length of a string, ignoring ANSI escape sequences."""
+    ansi_escape = re.compile(r'\x1b\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]')
+    return len(ansi_escape.sub('', text))
+
+# Paping Tool function
+@is_option
+def Paping_Tool():
+    ip = input("Enter IP address to ping with interval: ")
+    port = input("Enter port to ping (default 443): ")
+    if not port.isdigit():
+        port = "443"  # Default port if none provided
+    interval = input("Enter interval in seconds (default 1): ")
+    if not interval.isdigit():
+        interval = "1"  # Default interval if none provided
+
+    try:
+        while True:  # Infinite loop for continuous pinging
+            # Get the current time and format it
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # Clear the line using ANSI escape codes
+            sys.stdout.write("\033[2K\033[0G")  # Clear the entire line and move the cursor to the start
+            sys.stdout.flush()
+
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)  # Reduced timeout to speed up the pinging
+            result = sock.connect_ex((ip, int(port)))
+
+            # Construct the result message
+            if result == 0:
+                result_message = f"[{current_time}] {colored('Connection to ' + ip + ':' + port + ' successful!', 'green')}"
+            else:
+                result_message = f"[{current_time}] {colored('Connection to ' + ip + ':' + port + ' offline.', 'red')}"
+
+            # Display the result message
+            sys.stdout.write("\033[2K\033[0G")  # Clear the entire line and move the cursor to the start
+            sys.stdout.write(result_message)
+            sys.stdout.flush()
+
+            sock.close()
+            time.sleep(float(interval))  # Pause between pings
+    except KeyboardInterrupt:
+        print(colored("\nPaping interrupted. Returning to main menu...", "yellow"))
+    except Exception as e:
+        print(colored(f"An error occurred: {e}", "red"))
+
 # Main menu with improved formatting
 def main_menu():
     while True:
@@ -273,8 +326,9 @@ def main_menu():
         {Mg}{Bld}4. {Wh}Show Public IP{Gr}
         {Gr}{Bld}5. {Wh}ZPhisher Installation{Gr}
         {Cy}{Bld}6. {Wh}info-site{Gr}
-        {Re}{Bld}7. {Wh}Ip pinger{Gr}
-        {Re}{Bld}8. {Wh}Exit{Gr}
+        {Re}{Bld}7. {Wh}IP Pinger{Gr}
+        {Re}{Bld}8. {Wh}Paping Tool{Gr}
+        {Re}{Bld}9. {Wh}Exit{Gr}
         {Wh}===============================================
         """)
         choice = input(f"{Wh}{Bld}Select an option: {Gr}")
@@ -294,10 +348,13 @@ def main_menu():
         elif choice == "7":
             ip_pinger()
         elif choice == "8":
+            Paping_Tool()
+        elif choice == "9":
             print(f"{Wh}This tool was made by @mlag or xdrew87 Goodbye!{Wh}")
             sys.exit()
         else:
             print(f"{Re}Invalid option. Please try again.{Wh}")
+
 
 # Initialize and start
 if __name__ == "__main__":
