@@ -3,10 +3,9 @@ the phone number code from https://github.com/HunxByts/GhostTrack.
 My socials to msg are instagram or discord @xlsuixideix & @mlag for instagram, suicixde for discord.
 
 
-VERSION 2 is done and works.
-ASCII GIF will be added 2.5 or 3.0 version im looking for the right ones to add for evey option. 
-
-![Screenshot_2024-12-30_181009](https://github.com/user-attachments/assets/5378cb8e-fa79-4753-8477-d597bf165faf)
+VERSION 2.5 is done and works.
+added pap pinging for ovh 
+![Screenshot 2025-01-17 184021](https://github.com/user-attachments/assets/7e15308b-6c77-4122-b815-ac502639a0e2)
 
 
 
