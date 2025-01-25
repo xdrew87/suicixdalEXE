@@ -1,2 +1,5 @@
 requests
 phonenumbers
+termcolor==2.3.0
+termcolor
+ping3==4.0.3
