@@ -28,7 +28,7 @@ The author assumes **no responsibility** for any misuse or damage caused by this
 
 ## 📬 Contact  
 - **Instagram:** [@xlsuixideix](https://instagram.com/xlsuixideix) / [@mlag](https://instagram.com/mlag)  
-- **Discord:** `suicixde`  
+- **Discord:** `galmx`  
 
 ---
 
