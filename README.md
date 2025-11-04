@@ -1,6 +1,7 @@
+
 <!-- Banner -->
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/7e15308b-6c77-4122-b815-ac502639a0e2" alt="Project Banner" width="800">
+  <img width="1115" height="628" alt="Screenshot 2025-11-03 191659" src="https://github.com/user-attachments/assets/7c9f1163-9d9e-440b-a3d1-512789438d13" />
 </p>
 
 <h1 align="center">suicixdalEXE</h1>
@@ -39,7 +40,7 @@ The author assumes **no responsibility** for any misuse or damage caused by this
 ---
 
 ## 📸 Screenshot  
-![Screenshot](https://github.com/user-attachments/assets/7e15308b-6c77-4122-b815-ac502639a0e2)  
+<img width="1115" height="628" alt="Screenshot 2025-11-03 191659" src="https://github.com/user-attachments/assets/7c9f1163-9d9e-440b-a3d1-512789438d13" />  
 
 ---
 
