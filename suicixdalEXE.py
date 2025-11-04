@@ -341,7 +341,7 @@ def ip_blacklist():
     ip_address = input(f"{Wh}Enter an IP address to check: {Gr}")
     try:
         response = requests.get(f"https://api.abuseipdb.com/api/v2/check/{ip_address}", headers={
-            "Key": "y0abd9a9cc14fc6e48b3d1bdb92ebc0c54181bc2ff5ddb8f2a0a05eedc721d2f4bf98fba4ea553ddc",  # Replace with your AbuseIPDB API key
+            "Key": "YOU API KEY",  # Replace with your AbuseIPDB API key
             "Accept": "application/json"
         })
         if response.status_code == 200:
@@ -505,3 +505,4 @@ if __name__ == "__main__":
     clear_screen()
     print_banner()
     main_menu()
+
