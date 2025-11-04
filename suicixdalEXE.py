@@ -30,6 +30,22 @@ Bld = "\033[1m"  # Bold text
 
 VERSION = "v2.0"
 
+# --- Security & Configuration ---
+
+def load_config():
+    """Loads API keys from config.json."""
+    try:
+        with open('config.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"{Re}Error: 'config.json' not found. Please create it to use API-dependent features.{Wh}")
+        return {}
+    except json.JSONDecodeError:
+        print(f"{Re}Error: 'config.json' is not valid JSON.{Wh}")
+        return {}
+
+CONFIG = load_config()
+
 # Decorator to mark functions as menu options
 def is_option(func):
     def wrapper(*args, **kwargs):
@@ -223,23 +239,42 @@ def showIP():
 # Ip Pinger function
 @is_option
 def ip_pinger():
-    ip = input(f"{Wh}Enter IP address to ping: {Gr}")
-    ping_command = ['ping', '-c', '1', ip] if platform.system().lower() != 'windows' else ['ping', '-n', '1', ip]
+    ip = input(f"{Wh}Enter IP address to ping: {Gr}").strip()
+
+    # --- Security: Input validation for IP address ---
+    if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip) and not re.match(r"^[a-zA-Z0-9.-]+$", ip):
+        print(f"{Re}Invalid IP address or hostname format.{Wh}")
+        return
+
     try:
+        # --- Security: Use a list of arguments to prevent command injection ---
+        if platform.system().lower() == 'windows':
+            ping_command = ['ping', '-n', '1', ip]
+        else:
+            ping_command = ['ping', '-c', '1', ip]
+
         while True:
-            response = subprocess.run(ping_command, capture_output=True, text=True)
-            if "TTL=" in response.stdout or "ttl=" in response.stdout:
-                print(f"{Gr}Ping to {ip} successful.{Wh}")
+            # Using subprocess.run for simplicity and safety
+            process = subprocess.run(ping_command, capture_output=True, text=True, timeout=5)
+            
+            output = process.stdout + process.stderr
+            
+            # Check for successful ping response
+            if process.returncode == 0 and ("TTL=" in output or "ttl=" in output):
+                # Extract time for better output
+                ping_time = re.search(r"time[=<]([\d.]+)\s*ms", output)
+                time_str = f"in {ping_time.group(1)} ms" if ping_time else ""
+                print(f"{Gr}Reply from {ip}: {time_str}{Wh}")
             else:
-                print(f"{Re}Ping to {ip} Slammed by Frosted C2.{Wh}")
-            num = random.randint(1, 9)
-            if os.name == "nt":  # Only change color on Windows
-                os.system(f'color {num}')
+                print(f"{Re}Request timed out or host unreachable for {ip}.{Wh}")
+
             time.sleep(1)
-            print(f"{Wh}{'-'*50}")
     except KeyboardInterrupt:
         print(f"\n{Re}Ping interrupted. Returning to main menu...{Wh}")
-        main_menu()
+    except subprocess.TimeoutExpired:
+        print(f"\n{Re}Ping command timed out.{Wh}")
+    except Exception as e:
+        print(f"\n{Re}An error occurred: {e}{Wh}")
 
 def visible_length(text):
     """Calculate the visible length of a string, ignoring ANSI escape sequences."""
@@ -312,11 +347,12 @@ def zipcode_lookup():
 # Function to perform OSINT email lookup using Have I Been Pwned API
 @is_option
 def email_lookup():
-    email = input(f"{Wh}Enter an email address: {Gr}")
+    email = input(f"{Wh}Enter an email address: {Gr}").strip()
     api_url = f"https://haveibeenpwned.com/api/v3/breachedaccount/{email}"
+    api_key = CONFIG.get("hibp_api_key")
     headers = {
         "User-Agent": "OSINT-Tool",
-        "hibp-api-key": "your_hibp_api_key"  # Replace with your Have I Been Pwned API key
+        "hibp-api-key": api_key
     }
     try:
         response = requests.get(api_url, headers=headers)
@@ -338,10 +374,16 @@ def email_lookup():
 
 @is_option
 def ip_blacklist():
-    ip_address = input(f"{Wh}Enter an IP address to check: {Gr}")
+    ip_address = input(f"{Wh}Enter an IP address to check: {Gr}").strip()
+    api_key = CONFIG.get("abuseipdb_api_key")
+    if not api_key or "your_" in api_key:
+        print(f"{Re}AbuseIPDB API key not found in config.json. Please add it to use this feature.{Wh}")
+        return
+
     try:
+        # --- Security: Load API key from config ---
         response = requests.get(f"https://api.abuseipdb.com/api/v2/check/{ip_address}", headers={
-            "Key": "YOU API KEY",  # Replace with your AbuseIPDB API key
+            "Key": api_key,
             "Accept": "application/json"
         })
         if response.status_code == 200:
@@ -505,4 +547,3 @@ if __name__ == "__main__":
     clear_screen()
     print_banner()
     main_menu()
-
