@@ -264,7 +264,7 @@ pip install -r requirements-dev.txt  # if available
 
 ## 📜 License
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+This project is licensed under the **GNU General Public License v3.0**. See the `LICENSE` file for more details.
 
 ---
 
